@@ -23,12 +23,41 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Optimize image delivery
+        run: |
+          python -m pip install --disable-pip-version-check --quiet Pillow
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+
+          specs = {
+              "uae-cytotec-doctor-haytham-banner.webp": 1024,
+              "uae-cytotec-whatsapp-consultation-banner.webp": 1024,
+              "uae-cytotec-site-logo-badge.webp": 320,
+          }
+
+          for filename, max_width in specs.items():
+              path = Path(filename)
+              if not path.exists():
+                  continue
+
+              image = Image.open(path).convert("RGB")
+              if image.width > max_width:
+                  height = round(image.height * max_width / image.width)
+                  image = image.resize((max_width, height), Image.Resampling.LANCZOS)
+
+              image.save(path, "WEBP", quality=75, method=6)
+          PY
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
