@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://merelutfe-star.github.io/cytotec-doctor-haytham-uae/sitemap.xml
+Sitemap: https://merelutfe-star.github.io/cytotec-doctor-haytham-uae/image-sitemap.xml
